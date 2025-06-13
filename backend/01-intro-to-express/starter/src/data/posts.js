@@ -1,4 +1,4 @@
-const posts = [
+let posts = [
   {
     id: 1,
     title: "Why I Love Express",
@@ -23,4 +23,4 @@ const posts = [
   },
 ];
 
-export default posts;
+export default {posts};
