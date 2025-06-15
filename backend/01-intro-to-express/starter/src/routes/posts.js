@@ -1,20 +1,15 @@
 import express from "express";
-import logger from "../middleware/logger.js";
-import { createPost, deletePost, getPostById, getPosts, getPostsByAuthor, updatePost } from "../controllers/postsController.js";
+import { createPost, deletePost, getPostById, getPosts, updatePost } from "../controllers/postsController.js";
 import {body} from 'express-validator'
 import {updatePostValidator,validator} from '../middleware/validation.js'
 import { createdAt, updatedAt } from "../middleware/timesatamp.js";
 
 export const routes = express.Router();
 
-routes.get("/", logger, getPosts);
+routes.get("/", getPosts);
 
 // single post by id
-routes.get("/:id", logger, getPostById)
-
-// all posts filtered by author
-routes.get("/author/:author", logger, getPostsByAuthor)
-
+routes.get("/:id", getPostById)
 
 const postValidator = [
     body('title')
@@ -41,10 +36,10 @@ const postValidator = [
 ]
 
 // create new post
-routes.post("/", postValidator, validator, createdAt, updatedAt, logger, createPost)
+routes.post("/", postValidator, validator, createdAt, updatedAt, createPost)
 
 // update post by id
-routes.put("/:id", updatedAt,  postValidator, validator, updatePostValidator, logger, updatePost)
+routes.put("/:id", updatedAt,  postValidator, validator, updatePostValidator, updatePost)
 
 // delete post by id
-routes.delete("/:id", logger, deletePost)
+routes.delete("/:id", deletePost)

@@ -1,6 +1,21 @@
 import posts from "../data/posts.js";
 
 export const getPosts = (req, res) => {
+  const author = req.query.author; 
+
+  if (author) {
+    const authorLower = author.toLowerCase();
+    const post = posts.filter(post => 
+      String(post.author).toLowerCase() === authorLower
+    );
+    
+    if (post.length === 0) {
+      return res.status(404).json({ message: "No posts found for this author" });
+    }
+    
+    return res.status(200).json(post);
+  }
+
   res.status(200).json(posts);
 };
 
@@ -18,20 +33,6 @@ export const getPostById = (req, res) => {
   }
 
   res.status(200).json(post)
-}
-
-export const getPostsByAuthor = (req, res) => {
-  const author = String(req.params.author).toLowerCase()
-
-  const post = posts.filter(post => String(post.author).toLowerCase() === author)
-
-  if (post.length === 0) {
-    return res.status(404).json({ message: "No posts found for this author" });
-  }
-
-  res.status(200).json(post) 
-
-
 }
 
 export const createPost = (req, res) => {
