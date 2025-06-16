@@ -1,4 +1,42 @@
-.timer {
-  background-color: red;
+.promodoro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  font-size: 30px;
+  min-height: 1.3em;
+  margin-bottom: 10px;
   color: white;
 }
+
+.timer {
+  color: white;
+  font-size: 92px;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer-button {
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 8px 12px;
+  border-radius: 20%;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.timer-button:hover {
+  transform: scale(1.3);
+}
+

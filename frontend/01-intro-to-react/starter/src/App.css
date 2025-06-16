@@ -3,6 +3,7 @@
 * {
   margin: 0;
   padding: 0;
+  background-color: #1e212d;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
@@ -19,4 +20,5 @@
 .app-heading {
   font-size: 1.5rem;
   font-weight: 600;
+  color: white;
 }

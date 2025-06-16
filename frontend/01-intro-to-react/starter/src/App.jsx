@@ -6,8 +6,6 @@ import Motivation from "./components/Motivation";
 function App() {
   return (
     <div className="app-container">
-      <h1 className="app-heading">Session 1</h1>
-
       <Timer />
       <NotesList />
       <Motivation />
