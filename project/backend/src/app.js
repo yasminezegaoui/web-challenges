@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import {notesRouter} from "./routes/notes.js";
 import logger from "./middlewares/logger.js";
+import { prisma } from './prismaClient.js';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -29,6 +30,15 @@ app.get("/", (_, res) => {
   res.send("Hello, World!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await prisma.$connect();
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("DB connection failed", err);
+    process.exit(1);
+  }
+};
+startServer();
