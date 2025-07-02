@@ -16,16 +16,22 @@ export const noteValidators = (requireAll = true) => {
     return [
         reqOrOpt(body('title'))
             .isString()
+            .withMessage('Title must be a string')
+            .trim()
             .isLength({ min: 3, max: 50 })
             .withMessage('Title must be 3-50 characters'),
 
         reqOrOpt(body('content'))
             .isString()
+            .withMessage('Content must be a string')
+            .trim()
             .isLength({ min: 10, max: 500 })
             .withMessage('Content must be 10-500 characters'),
 
         reqOrOpt(body('authorName'))
             .isString()
+            .withMessage('Author name must be a string')
+            .trim()
             .isLength({ min: 3, max: 100 })
             .withMessage('Author name must be 3-100 characters'),
 

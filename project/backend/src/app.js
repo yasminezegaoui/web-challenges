@@ -18,7 +18,7 @@ app.use("/api/notes", logger,notesRouter);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(error.status || 500).json({ 
+  res.status(err.status || 500).json({ 
     status: "error",
     message: err.message,
     details: err.details || null

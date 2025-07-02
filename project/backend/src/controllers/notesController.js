@@ -5,7 +5,7 @@ import { handlePrismaError } from "../utils/prismaErrorHandler.js";
 
 export const notesRouter = express.Router();
 
-export const getAllNotes = async (req, res) => {
+export const getAllNotes = async (req, res, next) => {
     const { authorName } = req.query;
     try {
         if(authorName) {
@@ -20,7 +20,7 @@ export const getAllNotes = async (req, res) => {
         });
 
         if (notes.length === 0) {
-            return res.status(404).json({ error: "No notes found for this author" });
+            return next(createError(404, "No notes found"));
         }
 
         return res.json(notes);
@@ -29,6 +29,11 @@ export const getAllNotes = async (req, res) => {
         const notes = await prisma.note.findMany({
             orderBy: { id: 'asc' },
         });
+
+        if (notes.length === 0) {
+            return next(createError(404, "No notes found"));
+        }
+
         return res.json(notes);
     } catch (error) {
         console.error("Error fetching note:", error);
@@ -36,11 +41,11 @@ export const getAllNotes = async (req, res) => {
     }
 }
 
-export const createNote = async (req, res) => {
+export const createNote = async (req, res, next) => {
     const { title, content, authorName, isPublic } = req.body;
 
     if (!title || !content || !authorName) {
-        return res.status(400).json({ error: "Title, content, and author name are required" });
+        return next(createError(400, "Title, content, and author name are required"));
     }
 
     try {
@@ -49,17 +54,17 @@ export const createNote = async (req, res) => {
                 title,
                 content,
                 authorName,
-                isPublic: isPublic ?? false,
+                isPublic: isPublic ?? true,
             },
         });
         res.status(201).json(newNote);
     } catch (error) {
         console.error("Error creating note:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        next(internalServerError("Failed to create note"));
     }
 }
 
-export const updateNote = async (req, res) => {
+export const updateNote = async (req, res, next) => {
     const { id } = req.params;
     const { title, content, authorName, isPublic } = req.body;
 
@@ -83,7 +88,7 @@ export const updateNote = async (req, res) => {
     }
 }
 
-export const deleteNote = async (req, res) => {
+export const deleteNote = async (req, res, next) => {
     const { id } = req.params;
 
     try {
@@ -96,7 +101,7 @@ export const deleteNote = async (req, res) => {
     }
 }
 
-export const getNoteById = async (req, res) => {
+export const getNoteById = async (req, res, next) => {
     const { id } = req.params;
 
     try {
@@ -111,6 +116,6 @@ export const getNoteById = async (req, res) => {
         res.json(note);
     } catch (error) {
         console.error("Error fetching note:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        next(internalServerError("Failed to fetch note"));
     }
 }
