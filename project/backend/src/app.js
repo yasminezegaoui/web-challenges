@@ -18,7 +18,11 @@ app.use("/api/notes", logger,notesRouter);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(error.status || 500).json({ 
+    status: "error",
+    message: err.message,
+    details: err.details || null
+  });
 });
 
 app.get("/", (_, res) => {
