@@ -57,15 +57,16 @@ It powers the frontend React app by providing a robust REST API for managing not
   - `500 Internal Server Error` for server/DB issues.
 
 ✅ Consistent JSON format:
-```json
+` ```json
 {
   "status": "error",
   "message": "Description of the error",
   "details": null
 }
+`
 
 or
-```json
+` ```json
 {
   "status": "Unprocessable Content",
   "errors": [
@@ -77,6 +78,7 @@ or
     }
   ]
 }
+`
 
 ## 📝 Example Screenshots
 
