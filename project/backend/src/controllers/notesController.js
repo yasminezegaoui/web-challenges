@@ -1,7 +1,7 @@
 import express from "express";
 import { prisma } from "../prismaClient.js";
-import { createError } from "../utils/errorHandler.js";
 import { handlePrismaError } from "../utils/prismaErrorHandler.js";
+import { successResponse, errorResponse, notFoundResponse } from "../utils/responseFormatter.js";
 
 export const notesRouter = express.Router();
 
@@ -20,7 +20,7 @@ export const getAllNotes = async (req, res, next) => {
         });
 
         if (notes.length === 0) {
-            return next(createError(404, "No notes found"));
+            return notFoundResponse(res, "No notes found for the specified author");
         }
 
         return res.json(notes);
@@ -31,13 +31,13 @@ export const getAllNotes = async (req, res, next) => {
         });
 
         if (notes.length === 0) {
-            return next(createError(404, "No notes found"));
+            return notFoundResponse(res, "No notes found");
         }
 
         return res.json(notes);
     } catch (error) {
         console.error("Error fetching note:", error);
-        next(internalServerError("Failed to fetch note"));
+        return errorResponse(res, 500, "Failed to fetch notes");
     }
 }
 
@@ -45,7 +45,7 @@ export const createNote = async (req, res, next) => {
     const { title, content, authorName, isPublic } = req.body;
 
     if (!title || !content || !authorName) {
-        return next(createError(400, "Title, content, and author name are required"));
+        return errorResponse(res, 400, "Title, content, and author name are required");
     }
 
     try {
@@ -57,10 +57,10 @@ export const createNote = async (req, res, next) => {
                 isPublic: isPublic ?? true,
             },
         });
-        res.status(201).json(newNote);
+        return createdResponse(res, newNote, "Note created successfully");
     } catch (error) {
         console.error("Error creating note:", error);
-        next(internalServerError("Failed to create note"));
+        return errorResponse(res, 500, "Failed to create note");
     }
 }
 
@@ -69,7 +69,7 @@ export const updateNote = async (req, res, next) => {
     const { title, content, authorName, isPublic } = req.body;
 
     if (Object.keys(req.body).length === 0) {
-        return next(unprocessable("At least one field must be provided to update the note"));
+        return errorResponse(res, 422, "At least one field must be provided to update the note");
     }
 
     try {
@@ -82,9 +82,9 @@ export const updateNote = async (req, res, next) => {
                 isPublic,
             },
         });
-        res.json(updatedNote);
+        return successResponse(res, updatedNote, "Note updated successfully");
     } catch (error) {
-        handlePrismaError(error, next, "Failed to update note");
+        return handlePrismaError(error, res, "Failed to update note");
     }
 }
 
@@ -95,9 +95,9 @@ export const deleteNote = async (req, res, next) => {
         await prisma.note.delete({
             where: { id: parseInt(id) },
         });
-        res.status(200).json({ message: "Note deleted successfully" });
+        return successResponse(res, null, "Note deleted successfully");
     } catch (error) {
-        handlePrismaError(error, next, "Failed to delete note");
+        handlePrismaError(error, res, "Failed to delete note");
     }
 }
 
@@ -110,12 +110,12 @@ export const getNoteById = async (req, res, next) => {
         });
 
         if (!note) {
-            return next(createError(404, "Note not found"));
+            return notFoundResponse(res, "note not found");
         }
 
         res.json(note);
     } catch (error) {
         console.error("Error fetching note:", error);
-        next(internalServerError("Failed to fetch note"));
+        return errorResponse(res, 500, "Failed to fetch note");
     }
 }
