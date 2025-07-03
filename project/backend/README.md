@@ -88,7 +88,7 @@ or
 |------------------------|--------------------------------------------------------------|
 | Get all notes          | ![Get all notes](assets/screenshots/getAllNotes.PNG)         |
 | Get single note by ID  | ![Get note by ID](assets/screenshots/getNoteById.PNG)        |
-| Get notes by ID author | ![Get note by ID](assets/screenshots/getNoteByAuthorName.PNG)|
+| Get notes by author    | ![Get note by ID](assets/screenshots/getNoteByAuthorName.PNG)|
 | Create note            | ![Create note](assets/screenshots/createNewNote.PNG)         |
 | Update note            | ![Update note](assets/screenshots/updateNote.PNG)            |
 | Delete note            | ![Delete note](assets/screenshots/deleteNote.PNG)            |
